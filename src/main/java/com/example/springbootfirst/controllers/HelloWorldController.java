@@ -1,45 +1,59 @@
 package com.example.springbootfirst.controllers;
-import com.example.springbootfirst.models.Students;
-import com.example.springbootfirst.services.HelloWorldService;
+import com.example.springbootfirst.models.Student;
+import com.example.springbootfirst.service.HelloWorldService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-
-import org.springframework.web.bind.annotation.RestController;
-
+//import org.springframework.web.bind.annotation.DeleteMapping;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.PutMapping;
+//
+//import org.springframework.web.bind.annotation.RestController;
+//
 import java.util.List;
 
 
 @RestController
+@RequestMapping("/stud")
 
 public class HelloWorldController {
     @Autowired
-    HelloWorldService hws;
-
+    private HelloWorldService hws;
 
     @GetMapping("/")
-    public List<Students> hello(){
-        return hws.getMethod();
+    public List<Student> getmethod() {
 
+        return hws.getmethod();
     }
-    @PutMapping("/")
-    public String putMethod() {
-        return hws.putMethod();
+    // for retriving based on id specified:
+    @GetMapping("/{studentID}")
+    public Student getStudentById(@PathVariable int studentID)  {
+        return hws.getStudentById(studentID);
     }
 
     @PostMapping("/")
-    public String postMethod() {
-        return hws.postMethod();
+    public String postmethod(@RequestBody Student stud){
+        //Student stud = new Student(3,"Threya");
+        return hws.postmethod(stud);
+    }
+    @PutMapping("/")
+    public String putmethod() {
+        return hws.putmethod();
     }
 
-    @DeleteMapping ("/")
-    public String deleteMethod() {
-        return hws.deleteMethod();
+    @PutMapping("/{studentID}")
+    public String putmethod(@RequestBody Student student) {
+        return hws.updateStudentById(student);
+    }
+    @DeleteMapping("/")
+    public String deletemethod(){
+
+        return hws.deletemethod();
+    }
+    @DeleteMapping("/{studentID}")
+    public String deleteStudentById(@PathVariable int studentID)  {
+        return hws.deleteStudentById(studentID);
     }
 
 }
