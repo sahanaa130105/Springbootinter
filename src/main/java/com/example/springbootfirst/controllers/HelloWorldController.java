@@ -1,68 +1,55 @@
 package com.example.springbootfirst.controllers;
+
 import com.example.springbootfirst.models.Student;
+
 import com.example.springbootfirst.service.HelloWorldService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.bind.annotation.DeleteMapping;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.PutMapping;
-//
-//import org.springframework.web.bind.annotation.RestController;
-//
-import java.util.List;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/stud")
 
 public class HelloWorldController {
+
     @Autowired
     private HelloWorldService hws;
+     @PreAuthorize("hasAnyRole('ADMIN','USER')")
+     @GetMapping
+     public List<Student> getMethod(){
+         return hws.getAllStudents();
+     }
 
-    @GetMapping("/")
-    public List<Student> getmethod() {
-
-        return hws.getmethod();
-    }
-    // for retriving based on id specified:
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{studentID}")
-    public Student getStudentById(@PathVariable int studentID)  {
-        return hws.getStudentById(studentID);
+    public Student getStudentByID(@PathVariable int studentID) {
+        return hws.getStudentsByID(studentID);
     }
 
-    @PostMapping("/")
-    public String postmethod(@RequestBody Student stud){
-        //Student stud = new Student(3,"Threya");
-        return hws.postmethod(stud);
-    }
-    @PutMapping("/")
-    public String putmethod() {
-        return hws.putmethod();
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/dept/{dept}")
+    public List<Student> getStudentByDept(@PathVariable String dept) {
+        return hws.getStudentsByDept(dept);
     }
 
-    @PutMapping("/{studentID}")
-    public String putmethod(@RequestBody Student student) {
-        return hws.updateStudentById(student);
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping
+    public String addStudent(@RequestBody Student stud){
+        return hws.addStudent(stud);
     }
-    @DeleteMapping("/")
-    public String deletemethod(){
 
-        return hws.deletemethod();
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping
+    public String updateStudent(@RequestBody Student student) {
+        return hws.UpdateStudent(student);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{studentID}")
     public String deleteStudentById(@PathVariable int studentID)  {
         return hws.deleteStudentById(studentID);
     }
-
 }
-
-
-//public class HelloWorldController {
-//    @GetMapping("/")
-//    public String hello(){
-//        System.out.println("Hello world");
-//        return "Hello world this is universe";
-//    }
-//}
